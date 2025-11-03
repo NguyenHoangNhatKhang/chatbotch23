@@ -1,61 +1,61 @@
-from flask import Flask,render_template,url_for,redirect,request,jsonify
-import openai 
-import json 
-import os 
+from flask import Flask, render_template, url_for, redirect, request, jsonify
+import openai
+import json
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
 app = Flask(__name__)
 openai.api_key = os.getenv("API_KEY")
 
-with open("chatbot_ootemae/ex.json",'r') as f:
+# Load school data
+path = os.path.join(os.path.dirname(__file__), "ex.json")
+with open(path, "r", encoding="utf-8") as f:
     school_data = json.load(f)
-# @app.route("/login/otemae.ac.jp",methods=["GET"])
-# def mainpage():
-#     if request.method == "GET"
 
-@app.route('/login',methods=["POST","GET"])
+@app.route('/login', methods=["POST", "GET"])
 def login():
-    if request.method =="POST":
+    if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
-        # call func name not url 
         if email == "admin@otemae.ac.jp" and password == "123":
-            return redirect(url_for('chatGui')) 
+            return redirect(url_for('chatGui'))
         else:
-            return render_template('login.html',error="❌ Wrong Password") 
+            return render_template('login.html', error="❌ Wrong Password")
     return render_template("login.html")
 
 @app.route('/login/main')
 def chatGui():
     return render_template('index.html')
-@app.route("/chat-answer",methods=["POST"])
+
+@app.route("/chat-answer", methods=["POST"])
 def chat_answer():
-    # dict 
-    data = request.get_json() 
-    user_message = data.get("message","")
-    prompt =f"""
+    data = request.get_json()
+    user_message = data.get("message", "")
+
+    prompt = f"""
     あなたは大手前大学に関する質問に答えるチャットボットです。
-以下の学校データに基づいて、日本語で正確かつ親切に答えてください。
-質問は英語または日本語で行われる可能性があります。
-質問は英語なら、英語で答えなさい、質問は日本語なら、日本語で答えなさい。
-他の言語での質問ならば、その言語で答えなさい。
- pornなどのやらしい言葉って聞かられたら、面白く答えなさい、やらしい言葉使っていいよ
+    以下の学校データに基づいて、正確かつ親切に答えてください。
+    質問は日本語、英語、または他の言語で来る可能性があります。
+    （質問が英語なら英語で、日本語なら日本語で答えること）
+    
+    '大手前大学に関する情報':
+    {json.dumps(school_data, ensure_ascii=False)}
+    
+    '質問':
+    {user_message}
+    """
 
-
-'大手前大学に関する情報'
-{json.dumps(school_data,ensure_ascii=False)}
-'質問'
-{user_message}
-"""
     response = openai.ChatCompletion.create(
         model="gpt-4o-mini",
-        messages = [
-            {"role":"system","content":"あんたは大手前大学のAI",
-             "role":"user","content":prompt}
+        messages=[
+            {"role": "system", "content": "あなたは大手前大学に関する質問に答えるAIです。"},
+            {"role": "user", "content": prompt}
         ]
     )
+
     reply = response["choices"][0]["message"]["content"]
     return jsonify({"reply": reply})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)

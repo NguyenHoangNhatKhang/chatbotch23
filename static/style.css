@@ -1,75 +1,174 @@
-#chatbot-container {
-  position: fixed;
-  bottom: 90px;
-  right: 20px;
-  width: 300px;
-  height: 500px;
-  background-color: rgb(255, 255, 255);
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-}
+/* Nền tổng thể */
 body {
   background-image: url("https://creatorsmap.jp/school/images/school_daigaku_ootemae_tsugaku_cell1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans JP", sans-serif;
+  overflow-x: hidden;
+  color: #222;
+  background-attachment: fixed; 
+  min-height: 100svh;  
 }
 
+/* Thanh navbar */
+.navbar {
+  background-color: rgba(0, 0, 64, 0.8) !important;
+  backdrop-filter: blur(5px);
+}
+.navbar a {
+  color: #fff !important;
+  font-weight: 500;
+}
+.navbar a:hover {
+  color: #aad4ff !important;
+}
+
+/* Chatbot container */
+#chatbot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 340px;
+  height: 520px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  z-index: 999;
+}
+
+/* Header chatbot */
 #chatbot-header {
-  background-color: rgb(17, 0, 128);
+  background: linear-gradient(90deg, #0048a0, #0077cc);
   color: white;
-  padding: 10px;
+  padding: 12px;
   text-align: center;
   font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 16px;
 }
 
+/* Nội dung tin nhắn */
 #chatbot-messages {
   flex: 1;
-  padding: 10px;
+  padding: 15px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 250px;
 }
+
+/* Bong bóng tin nhắn */
 .message {
-  padding: 8px 12px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
   max-width: 80%;
+  line-height: 1.4;
+  font-size: 14px;
 }
 
 .message.bot {
-  background-color: #f1f1f1;
+  background-color: #eef2ff;
   align-self: flex-start;
+  color: #222;
 }
 
 .message.user {
-  background-color: #dcf8c6;
+  background-color: #d4f8d4;
   align-self: flex-end;
+  color: #000;
 }
 
+/* Input */
 #chatbot-input-container {
   display: flex;
   padding: 10px;
   border-top: 1px solid #ddd;
-  gap: 5px;
+  gap: 8px;
+  background: #fff;
 }
 
 #chatbot-input {
   flex: 1;
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 14px;
 }
 
 #sent-btn {
   padding: 8px 12px;
-  background-color: green;
+  background: #0078ff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.3s;
+}
+#sent-btn:hover {
+  background: #005fcc;
+}
+/* tấm nền mờ nhẹ sau chữ để nổi hơn trên ảnh */
+.hero-backdrop{
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 16px;
+  padding: clamp(12px, 3vw, 24px);
+  display: inline-block;      /* gói gọn theo nội dung */
+}
+
+/* size + đổ bóng như trên */
+.hero-title{
+  font-size: clamp(28px, 5vw, 56px);
+  text-shadow: 0 3px 16px rgba(0,0,0,.6);
+}
+.hero-subtitle{
+  font-size: clamp(14px, 2.2vw, 20px);
+  color: rgba(255,255,255,.9);
+  text-shadow: 0 2px 12px rgba(0,0,0,.55);
+}
+/* Căn giữa theo chiều dọc vùng nhập + nút */
+#chatbot-input-container{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px;              /* có thể 6–10px tuỳ ý */
+}
+
+/* Gỡ min-height mặc định của Bootstrap và tự đặt height */
+#chatbot-input.form-control{
+  box-sizing: border-box;
+  min-height: 0;            /* quan trọng */
+  height: 44px;             /* 40–44px là đẹp */
+  padding: 10px 12px;       /* chỉnh padding để chữ thật sự giữa */
+  line-height: 1.2;         /* tránh placeholder bị lệch */
+  margin: 0;                /* đề phòng form-control có margin */
+  -webkit-appearance: none; /* iOS không bị padding lạ */
+}
+
+/* Placeholder không kéo giãn line-height */
+#chatbot-input::placeholder{
+  line-height: normal;
+  opacity: .75;             /* optional: nhìn dịu hơn */
+}
+
+/* Cho nút Send cao bằng input */
+#sent-btn.btn{
+  height: 44px;              /* khớp với input */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+/* Nút Send không bị co dãn font */
+#sent-btn.btn{
+  font-size: 14px;           /* hoặc 15px tuỳ ý */
+  white-space: nowrap;       /* tránh bị xuống dòng */
 }
